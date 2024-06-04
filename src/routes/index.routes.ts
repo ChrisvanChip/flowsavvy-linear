@@ -19,10 +19,10 @@ router.get('/', async (req: Request, res: Response) => {
     });
 });
 
+// Actual webhook endpoint – this is where the magic happens ✨
 router.post('/', (req: Request, res: Response) => {
-    console.log(req.body)
     let body = req.body;
-    if (!body.data) {
+    if (!body || !body.data) {
         res.json({
             status: 'error',
             message: 'No data provided.'
@@ -30,10 +30,13 @@ router.post('/', (req: Request, res: Response) => {
         return;
     }
     body = body.data;
-    const signature = crypto.createHmac("sha256", process.env.SIGNING_SECRET!).update(req.body).digest("hex");
+
+    const signature = crypto.createHmac("sha256", process.env.SIGNING_SECRET!).update(req.rawBody).digest("hex");
     if (signature !== req.headers['linear-signature']) {
         throw "Invalid signature"
     }
+
+    // Validated and ready to go
     console.log(body);
 })
 
