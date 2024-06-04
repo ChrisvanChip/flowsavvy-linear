@@ -1,5 +1,12 @@
 import {Request, Response, Router} from 'express';
 import FlowSavvy from "../classes/FlowSavvy";
+import crypto from "crypto";
+
+import dotenv from "dotenv";
+import assert from "node:assert";
+
+dotenv.config()
+assert(process.env.SIGNING_SECRET, 'SIGNING_SECRET is required')
 
 const Client = new FlowSavvy();
 const router = Router();
@@ -23,6 +30,10 @@ router.post('/', (req: Request, res: Response) => {
         return;
     }
     body = body.data;
+    const signature = crypto.createHmac("sha256", process.env.SIGNING_SECRET!).update(req.body).digest("hex");
+    if (signature !== req.headers['linear-signature']) {
+        throw "Invalid signature"
+    }
     console.log(body);
 })
 
