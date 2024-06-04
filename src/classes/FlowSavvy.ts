@@ -69,7 +69,7 @@ class FlowSavvy {
             },
             ...config
         });
-        if (donotretry && response.status === 302) {
+        if (!donotretry && response.status === 302) {
             this.login();
             return this.request(method, endpoint, data, config, true);
         }
