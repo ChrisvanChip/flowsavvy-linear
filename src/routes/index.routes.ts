@@ -17,10 +17,10 @@ router.get('/', async (req: Request, res: Response) => {
         message: 'Use this URL as Linear webhook to sync with FlowSavvy.',
         author: '@ChrisvanChip',
     });
-    console.log(await Client.isAuthenticated());
 });
 
 router.post('/', (req: Request, res: Response) => {
+    console.log(req.body)
     let body = req.body;
     if (!body.data) {
         res.json({
