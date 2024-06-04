@@ -15,7 +15,15 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.post('/', (req: Request, res: Response) => {
     let body = req.body;
-
+    if (!body.data) {
+        res.json({
+            status: 'error',
+            message: 'No data provided.'
+        });
+        return;
+    }
+    body = body.data;
+    console.log(body);
 })
 
 export default router;
