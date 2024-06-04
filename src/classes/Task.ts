@@ -8,11 +8,6 @@ class Task {
         this.Notes = notes;
         this.DueDateTime = dueDateTime;
     }
-
-    searchTasks(searchText: string): Task[] {
-        // Search for tasks with the given text
-        return [];
-    }
 }
 
 export default Task;

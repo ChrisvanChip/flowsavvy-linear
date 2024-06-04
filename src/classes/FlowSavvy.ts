@@ -2,6 +2,7 @@ import axios, {AxiosResponse} from 'axios';
 import FormData from 'form-data';
 import dotenv from "dotenv";
 import assert from "node:assert";
+import Task from "./Task";
 
 dotenv.config();
 assert(process.env.EMAIL, 'EMAIL is required')
@@ -74,6 +75,21 @@ class FlowSavvy {
             return this.request(method, endpoint, data, config, true);
         }
         return response;
+    }
+
+    async searchTask(query: string): Promise<Task | undefined> {
+        let task: Task;
+        let response = await this.request('GET', `item/search?query=${query}&searchCompletedTasks=false&getItemsAfterCursor=true&takeFirst=true&batchSize=50`, {})
+
+        let tasksData = response.data.searchResponse.items;
+        if (tasksData.length === 0) {
+            return;
+        }
+
+        let taskData = tasksData[0];
+        task = new Task(taskData.Title, taskData.Notes, taskData.DueDateTime);
+
+        return task;
     }
 
     async isAuthenticated(): Promise<boolean> {

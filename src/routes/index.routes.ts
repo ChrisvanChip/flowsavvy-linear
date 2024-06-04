@@ -37,7 +37,17 @@ router.post('/', (req: Request, res: Response) => {
     }
 
     // Validated and ready to go
-    console.log(body);
+    Client.searchTask(body.identifier).then(task => {
+        if (task) {
+            console.log(task)
+            res.send(task)
+        } else {
+            res.json({
+                status: 'error',
+                message: 'Task not found.'
+            });
+        }
+    })
 })
 
 export default router;
