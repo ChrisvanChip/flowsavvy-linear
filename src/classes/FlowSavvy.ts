@@ -111,9 +111,16 @@ class FlowSavvy {
         }
 
         let taskData = tasksData[0];
-        task = new Task(taskData.id, taskData.Title, taskData.Notes, taskData.DueDateTime)
+        let duration = taskData.DurationHours * 60 + taskData.DurationMinutes;
+        task = new Task(taskData.id, duration, taskData.Title, taskData.Notes, taskData.DueDateTime);
 
         return task;
+    }
+
+    async forceRecalculate() {
+        let formData = new FormData();
+        formData.append('force', 'true')
+        await this.request('POST', 'Schedule/Recalculate', formData, true, formData.getHeaders())
     }
 }
 
