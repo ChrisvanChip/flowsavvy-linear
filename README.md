@@ -5,7 +5,7 @@ Recently, I discovered [FlowSavvy](https://flowsavvy.app), an automatic time-blo
 
 However, creating tasks felt sluggish. I already use Linear for solo development, so after 0 days of using FlowSavvy (really 🙈), I created an integration to lift this burden. If you are assigned to a Linear issue, FlowSavvy will automatically schedule it in the best spot in your schedule. Now, you've automated the automator!
 
-This is also my first dive into TypeScript! I've always postponed trying it out, but I'm sure it saved me from debugging hundreds of weird bugs with JS 😅
+This is also my first dive into TypeScript! I've always postponed trying it out, but it definitely saved me from quite a few bugs
 
 ## How it works
 This integration uses Linear's Webhook feature. It hosts a Node.js Express server, which receives the payload sent by Linear, verifies the hash, and communicates the appropriate action with FlowSavvy.
