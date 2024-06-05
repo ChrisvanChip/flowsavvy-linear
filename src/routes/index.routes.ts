@@ -50,7 +50,7 @@ router.post('/', (req: Request, res: Response) => {
                 task.DurationHours = Math.floor(duration / 60);
                 task.DurationMinutes = duration % 60;
                 task.Title = `${body.title} (${body.identifier})`;
-                task.Notes = body.Description + "\n\n" + body.url;
+                task.Notes = body.Description || "" + "\n\n" + body.url;
                 task.DueDateTime = body.dueDate ? body.dueDate + 'T23:59:59' : null;
                 task.EndDateTime = `2000-01-01T${task.DurationHours.toString().padStart(2, '0')}:${task.DurationMinutes.toString().padStart(2, '0')}:00`
 
@@ -60,17 +60,16 @@ router.post('/', (req: Request, res: Response) => {
                 }
                 Client.request('POST', 'Item/Edit', formData, true, formData.getHeaders()).then((response) => {
                     void Client.forceRecalculate();
+                    if (body.state.type === 'completed') {
+                        console.log(`[log] Mark task as completed in FlowSavvy: ${task.id}`)
+
+                        let formData = new FormData();
+                        formData.append('serializedItemIdToInstanceIdsDict', `{"${task.id}":[0]}`)
+                        Client.request('POST', 'Item/ChangeTaskCompleteStatus', formData, true, formData.getHeaders()).then((response) => {
+
+                        })
+                    }
                 })
-
-                if (body.state.type === 'completed') {
-                    console.log(`[log] Mark task as completed in FlowSavvy: ${task.id}`)
-
-                    let formData = new FormData();
-                    formData.append('serializedItemIdToInstanceIdsDict', `{"${task.id}":[0]}`)
-                    Client.request('POST', 'Item/ChangeTaskCompleteStatus', formData, true, formData.getHeaders()).then((response) => {
-                        void Client.forceRecalculate();
-                    })
-                }
             } else {
                 console.log(`[log] Task assigned to someone else, so delete: ${task.id}`)
 
@@ -88,7 +87,7 @@ router.post('/', (req: Request, res: Response) => {
                 let duration = Number(process.env.ESTIMATION_POINT_IN_MINUTES!);
                 duration *= body.estimate || 1;
 
-                let task = new Task(0, duration, `${body.title} (${body.identifier})`, body.description + "\n\n" + body.url, body.dueDate);
+                let task = new Task(0, duration, `${body.title} (${body.identifier})`, body.description || "" + "\n\n" + body.url, body.dueDate);
                 let formData = new FormData();
                 for (let [key, value] of Object.entries(task)) {
                     if (value) formData.append(key, value.toString());
