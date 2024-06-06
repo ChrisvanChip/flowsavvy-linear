@@ -94,7 +94,7 @@ class FlowSavvy {
 
         if (!donotretry && response.status === 302) {
             this.login().then(() => {
-                return this.request(method, endpoint, data, headers, withToken, true);
+                return this.request(method, endpoint, data, withToken, headers, true);
             })
         }
 
