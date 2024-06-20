@@ -34,9 +34,19 @@ router.post('/', (req: Request, res: Response) => {
     }
     body = body.data;
 
-    const signature = crypto.createHmac("sha256", process.env.SIGNING_SECRET!).update(req.rawBody).digest("hex");
-    if (process.env.SIGNING_SECRET !== 'DEV' && signature !== req.headers['linear-signature']) {
-        throw "Invalid signature"
+    let tokens = process.env.SIGNING_SECRET!.split(";")
+    let valid = false
+    if(process.env.SIGNING_SECRET == 'DEV'){
+        valid = true
+    }
+    tokens.forEach(function(token){
+        const signature = crypto.createHmac("sha256", token).update(req.rawBody).digest("hex");
+        if (signature == req.headers['linear-signature']) {
+            valid = true
+        }
+    })
+    if(!valid){
+        throw "Invalid signature. SIGNING_SECRET failed."
     }
 
     const assignedToMe = body.assignee?.name === process.env.FULL_NAME;
