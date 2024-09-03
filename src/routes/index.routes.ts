@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express';
+import { Request, Response, Router } from 'express';
 import FlowSavvy from "../classes/FlowSavvy";
 import crypto from "crypto";
 import FormData from 'form-data';
@@ -36,16 +36,16 @@ router.post('/', (req: Request, res: Response) => {
 
     let tokens = process.env.SIGNING_SECRET!.split(";")
     let valid = false
-    if(process.env.SIGNING_SECRET == 'DEV'){
+    if (process.env.SIGNING_SECRET == 'DEV') {
         valid = true
     }
-    tokens.forEach(function(token){
+    tokens.forEach(function (token) {
         const signature = crypto.createHmac("sha256", token).update(req.rawBody).digest("hex");
         if (signature == req.headers['linear-signature']) {
             valid = true
         }
     })
-    if(!valid){
+    if (!valid) {
         throw "Invalid signature. SIGNING_SECRET failed."
     }
 
@@ -70,7 +70,7 @@ router.post('/', (req: Request, res: Response) => {
                 }
                 Client.request('POST', 'Item/Edit', formData, true, formData.getHeaders()).then((response) => {
                     void Client.forceRecalculate();
-                    if (body.state.type === 'completed') {
+                    if (body.state.type === 'completed' || body.state.type === 'canceled') {
                         console.log(`[log] Mark task as completed in FlowSavvy: ${task.id}`)
 
                         let formData = new FormData();
