@@ -34,14 +34,9 @@ router.post('/', (req: Request, res: Response) => {
     }
     body = body.data;
 
-<<<<<<< HEAD
-    let tokens = process.env.SIGNING_SECRET!.split(";");
-    let valid = false;
-    let priority = 1; // Default priority
-=======
+
     let tokens = process.env.SIGNING_SECRET!.split(";")
     let valid = false
->>>>>>> parent of 78530aa (Add task priority based on signing secret)
     if (process.env.SIGNING_SECRET == 'DEV') {
         valid = true;
     }
@@ -50,14 +45,7 @@ router.post('/', (req: Request, res: Response) => {
         const secret = match ? match[2] : token;
         const signature = crypto.createHmac("sha256", secret).update(req.rawBody).digest("hex");
         if (signature == req.headers['linear-signature']) {
-<<<<<<< HEAD
-            valid = true;
-            if (match) {
-                priority = parseInt(match[1], 10);
-            }
-=======
             valid = true
->>>>>>> parent of 78530aa (Add task priority based on signing secret)
         }
     });
     if (!valid) {
@@ -77,12 +65,7 @@ router.post('/', (req: Request, res: Response) => {
                 task.Title = `${body.title} (${body.identifier})`;
                 task.Notes = body.Description || "" + "\n\n" + body.url;
                 task.DueDateTime = body.dueDate ? body.dueDate + 'T23:59:59' : null;
-<<<<<<< HEAD
-                task.EndDateTime = `2000-01-01T${task.DurationHours.toString().padStart(2, '0')}:${task.DurationMinutes.toString().padStart(2, '0')}:00`;
-                task.priority = priority; // Update priority
-=======
                 task.EndDateTime = `2000-01-01T${task.DurationHours.toString().padStart(2, '0')}:${task.DurationMinutes.toString().padStart(2, '0')}:00`
->>>>>>> parent of 78530aa (Add task priority based on signing secret)
 
                 let formData = new FormData();
                 for (let [key, value] of Object.entries(task)) {
