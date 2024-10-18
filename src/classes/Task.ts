@@ -10,7 +10,7 @@ class Task {
     Completed: boolean = false;
     DurationHours: number;
     DurationMinutes: number;
-    priority: number = 1;
+    priority: number;
     BufferTimeBeforeHours: number = 0;
     BufferTimeBeforeMinutes: number = 0;
     BufferTimeAfterHours: number = 0;
@@ -55,7 +55,7 @@ class Task {
     Title: string;
     Location: string = '';
 
-    constructor(id: number, duration: number, title: string, notes: string, dueDate?: string) {
+    constructor(id: number, duration: number, title: string, notes: string, dueDate?: string, priority: number = 1) {
         this.id = id;
         this.DurationHours = Math.floor(duration / 60);
         this.DurationMinutes = duration % 60;
@@ -63,6 +63,14 @@ class Task {
         this.Notes = notes;
         this.DueDateTime = dueDate ? dueDate + 'T23:59:59' : null;
         this.EndDateTime = `2000-01-01T${this.DurationHours.toString().padStart(2, '0')}:${this.DurationMinutes.toString().padStart(2, '0')}:00`
+        this.priority = priority;
+    }
+
+    setPriorityFromSecret(secret: string) {
+        const match = secret.match(/^P(\d+)_(.*)$/);
+        if (match) {
+            this.priority = parseInt(match[1], 10);
+        }
     }
 }
 

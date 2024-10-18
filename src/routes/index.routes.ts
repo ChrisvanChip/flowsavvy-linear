@@ -36,6 +36,7 @@ router.post('/', (req: Request, res: Response) => {
 
     let tokens = process.env.SIGNING_SECRET!.split(";")
     let valid = false
+    let priority = 1; // Default priority
     if (process.env.SIGNING_SECRET == 'DEV') {
         valid = true
     }
@@ -43,6 +44,10 @@ router.post('/', (req: Request, res: Response) => {
         const signature = crypto.createHmac("sha256", token).update(req.rawBody).digest("hex");
         if (signature == req.headers['linear-signature']) {
             valid = true
+            const match = token.match(/^P(\d+)_(.*)$/);
+            if (match) {
+                priority = parseInt(match[1], 10);
+            }
         }
     })
     if (!valid) {
@@ -63,6 +68,7 @@ router.post('/', (req: Request, res: Response) => {
                 task.Notes = body.Description || "" + "\n\n" + body.url;
                 task.DueDateTime = body.dueDate ? body.dueDate + 'T23:59:59' : null;
                 task.EndDateTime = `2000-01-01T${task.DurationHours.toString().padStart(2, '0')}:${task.DurationMinutes.toString().padStart(2, '0')}:00`
+                task.priority = priority; // Update priority
 
                 let formData = new FormData();
                 for (let [key, value] of Object.entries(task)) {
@@ -97,7 +103,7 @@ router.post('/', (req: Request, res: Response) => {
                 let duration = Number(process.env.ESTIMATION_POINT_IN_MINUTES!);
                 duration *= body.estimate || 1;
 
-                let task = new Task(0, duration, `${body.title} (${body.identifier})`, body.description || "" + "\n\n" + body.url, body.dueDate);
+                let task = new Task(0, duration, `${body.title} (${body.identifier})`, body.description || "" + "\n\n" + body.url, body.dueDate, priority);
                 let formData = new FormData();
                 for (let [key, value] of Object.entries(task)) {
                     if (value) formData.append(key, value.toString());
