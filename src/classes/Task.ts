@@ -27,7 +27,7 @@ class Task {
     ItemType: string = 'task';
     Changed: boolean = false;
     CalendarID: number = Number(process.env.CALENDAR_ID!);
-    timeProfileId: number;
+    TimeProfileID: number;
     LastMovedUtc: string = '0001-01-01T00:00:00';
     StartDateTime: string = '2000-01-01T00:00:00';
     EndDateTime: string;
