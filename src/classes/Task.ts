@@ -27,7 +27,7 @@ class Task {
     ItemType: string = 'task';
     Changed: boolean = false;
     CalendarID: number = Number(process.env.CALENDAR_ID!);
-    TimeProfileID: number = 223930;
+    TimeProfileID: number;
     LastMovedUtc: string = '0001-01-01T00:00:00';
     StartDateTime: string = '2000-01-01T00:00:00';
     EndDateTime: string;
@@ -55,7 +55,7 @@ class Task {
     Title: string;
     Location: string = '';
 
-    constructor(id: number, duration: number, title: string, notes: string, dueDate?: string) {
+    constructor(id: number, duration: number, title: string, notes: string, dueDate?: string, timeProfileId?: number) {
         this.id = id;
         this.DurationHours = Math.floor(duration / 60);
         this.DurationMinutes = duration % 60;
@@ -63,6 +63,7 @@ class Task {
         this.Notes = notes;
         this.DueDateTime = dueDate ? dueDate + 'T23:59:59' : null;
         this.EndDateTime = `2000-01-01T${this.DurationHours.toString().padStart(2, '0')}:${this.DurationMinutes.toString().padStart(2, '0')}:00`
+        this.TimeProfileID = timeProfileId ?? 223930;
     }
 }
 

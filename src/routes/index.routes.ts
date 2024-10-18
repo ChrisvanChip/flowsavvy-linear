@@ -5,6 +5,7 @@ import FormData from 'form-data';
 import dotenv from "dotenv";
 import assert from "node:assert";
 import Task from "../classes/Task";
+import fs from 'fs';
 
 dotenv.config()
 assert(process.env.SIGNING_SECRET, '[env variables] SIGNING_SECRET is required')
@@ -34,9 +35,8 @@ router.post('/', (req: Request, res: Response) => {
     }
     body = body.data;
 
-
-    let tokens = process.env.SIGNING_SECRET!.split(";")
-    let valid = false
+    let tokens = process.env.SIGNING_SECRET!.split(";");
+    let valid = false;
     if (process.env.SIGNING_SECRET == 'DEV') {
         valid = true;
     }
@@ -45,7 +45,7 @@ router.post('/', (req: Request, res: Response) => {
         const secret = match ? match[2] : token;
         const signature = crypto.createHmac("sha256", secret).update(req.rawBody).digest("hex");
         if (signature == req.headers['linear-signature']) {
-            valid = true
+            valid = true;
         }
     });
     if (!valid) {
@@ -53,6 +53,9 @@ router.post('/', (req: Request, res: Response) => {
     }
 
     const assignedToMe = body.assignee?.name === process.env.FULL_NAME;
+    const config = JSON.parse(fs.readFileSync('configs.json', 'utf8'));
+    const timeProfileId = config[body.token]?.timeProfileId;
+
     Client.searchTask(body.identifier).then(task => {
         if (task) {
             if (assignedToMe) {
@@ -65,7 +68,11 @@ router.post('/', (req: Request, res: Response) => {
                 task.Title = `${body.title} (${body.identifier})`;
                 task.Notes = body.Description || "" + "\n\n" + body.url;
                 task.DueDateTime = body.dueDate ? body.dueDate + 'T23:59:59' : null;
-                task.EndDateTime = `2000-01-01T${task.DurationHours.toString().padStart(2, '0')}:${task.DurationMinutes.toString().padStart(2, '0')}:00`
+                task.EndDateTime = `2000-01-01T${task.DurationHours.toString().padStart(2, '0')}:${task.DurationMinutes.toString().padStart(2, '0')}:00`;
+
+                if (timeProfileId) {
+                    task.TimeProfileID = timeProfileId;
+                }
 
                 let formData = new FormData();
                 for (let [key, value] of Object.entries(task)) {
@@ -101,6 +108,9 @@ router.post('/', (req: Request, res: Response) => {
                 duration *= body.estimate || 1;
 
                 let task = new Task(0, duration, `${body.title} (${body.identifier})`, body.description || "" + "\n\n" + body.url, body.dueDate);
+                if (timeProfileId) {
+                    task.TimeProfileID = timeProfileId;
+                }
                 let formData = new FormData();
                 for (let [key, value] of Object.entries(task)) {
                     if (value) formData.append(key, value.toString());
