@@ -43,12 +43,12 @@ router.post('/', (req: Request, res: Response) => {
     tokens.forEach(function (token) {
         const match = token.match(/^C(\d+)_(.*)$/);
         const secret = match ? match[2] : token;
-        if (match) {
-            prefix = match[1];
-        }
         const signature = crypto.createHmac("sha256", secret).update(req.rawBody).digest("hex");
         if (signature == req.headers['linear-signature']) {
             valid = true;
+            if (match) {
+                prefix = match[1];
+            }
         }
     });
     if (!valid) {
