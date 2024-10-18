@@ -19,5 +19,4 @@ This integration uses Linear's Webhook feature. It hosts a Node.js Express serve
 4. Under **API**, click on **Create new webhook**. Give it a label, enter your application domain and copy the signing secret.
 5. Click **Create webhook** and head back to your hosting platform.
 6. Copy over the environment variables from example.env, all of them are required to run.
-7. Set the `SIGNING_SECRET` environment variable to a semicolon-separated list of secrets. The priority of a task will be determined based on the prefix of the matching secret in this list. For example, if the `SIGNING_SECRET` is set to `P1_secret1;P1_secret2;P3_secret3`, the tasks signed with P1 (`P1_secret1`, `P1_secret2`) will have a priority of 1, and a task signed with `P3_secret3` will have a priority of 3.
-8. Run `npm run start` or **Deploy** and you should be good to go! 🎉
+7. Run `npm run start` or **Deploy** and you should be good to go! 🎉
