@@ -5,7 +5,6 @@ import FormData from 'form-data';
 import dotenv from "dotenv";
 import assert from "node:assert";
 import Task from "../classes/Task";
-import fs from 'fs';
 
 dotenv.config()
 assert(process.env.SIGNING_SECRET, '[env variables] SIGNING_SECRET is required')
@@ -40,9 +39,13 @@ router.post('/', (req: Request, res: Response) => {
     if (process.env.SIGNING_SECRET == 'DEV') {
         valid = true;
     }
+    let prefix = null;
     tokens.forEach(function (token) {
-        const match = token.match(/^P(\d+)_(.*)$/);
+        const match = token.match(/^C(\d+)_(.*)$/);
         const secret = match ? match[2] : token;
+        if (match) {
+            prefix = match[1];
+        }
         const signature = crypto.createHmac("sha256", secret).update(req.rawBody).digest("hex");
         if (signature == req.headers['linear-signature']) {
             valid = true;
@@ -53,8 +56,8 @@ router.post('/', (req: Request, res: Response) => {
     }
 
     const assignedToMe = body.assignee?.name === process.env.FULL_NAME;
-    const config = JSON.parse(fs.readFileSync('configs.json', 'utf8'));
-    const timeProfileId = config[body.token]?.timeProfileId;
+    console.log(`[debug] -> C${prefix}_TIMEPROFILEID`)
+    const timeProfileId = process.env[`C${prefix}_TIMEPROFILEID`];
 
     Client.searchTask(body.identifier).then(task => {
         if (task) {
@@ -71,7 +74,7 @@ router.post('/', (req: Request, res: Response) => {
                 task.EndDateTime = `2000-01-01T${task.DurationHours.toString().padStart(2, '0')}:${task.DurationMinutes.toString().padStart(2, '0')}:00`;
 
                 if (timeProfileId) {
-                    task.TimeProfileID = timeProfileId;
+                    task.TimeProfileID = Number(timeProfileId);
                 }
 
                 let formData = new FormData();
@@ -109,7 +112,7 @@ router.post('/', (req: Request, res: Response) => {
 
                 let task = new Task(0, duration, `${body.title} (${body.identifier})`, body.description || "" + "\n\n" + body.url, body.dueDate);
                 if (timeProfileId) {
-                    task.TimeProfileID = timeProfileId;
+                    task.TimeProfileID = Number(timeProfileId);
                 }
                 let formData = new FormData();
                 for (let [key, value] of Object.entries(task)) {
