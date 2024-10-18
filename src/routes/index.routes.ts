@@ -71,7 +71,7 @@ router.post('/', (req: Request, res: Response) => {
                 task.EndDateTime = `2000-01-01T${task.DurationHours.toString().padStart(2, '0')}:${task.DurationMinutes.toString().padStart(2, '0')}:00`;
 
                 if (timeProfileId) {
-                    task.timeProfileId = timeProfileId;
+                    task.TimeProfileID = timeProfileId;
                 }
 
                 let formData = new FormData();
@@ -109,7 +109,7 @@ router.post('/', (req: Request, res: Response) => {
 
                 let task = new Task(0, duration, `${body.title} (${body.identifier})`, body.description || "" + "\n\n" + body.url, body.dueDate);
                 if (timeProfileId) {
-                    task.timeProfileId = timeProfileId;
+                    task.TimeProfileID = timeProfileId;
                 }
                 let formData = new FormData();
                 for (let [key, value] of Object.entries(task)) {
