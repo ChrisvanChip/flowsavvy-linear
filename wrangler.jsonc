@@ -1,0 +1,38 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flowsavvy-linear",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-06",
+  "observability": { "enabled": true },
+  "vars": {
+    "FLOW_SAVVY_EMAIL": "you@example.com",
+    "FLOW_SAVVY_TIME_ZONE": "Europe/Amsterdam",
+    "LINEAR_ASSIGNEE_NAME": "Your Name",
+    "MINUTES_PER_POINT": "15",
+    "LINEAR_WEBHOOKS": "[{\"secret\":\"\",\"schedulingHoursId\":123,\"taskListId\":456}]",
+  },
+  "secrets": {
+    "required": ["FLOW_SAVVY_PASSWORD"],
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "flowsavvy-linear",
+      "database_id": "replace-during-deploy",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "queues": {
+    "producers": [{ "binding": "WEBHOOK_QUEUE", "queue": "flowsavvy-linear" }],
+    "consumers": [
+      {
+        "queue": "flowsavvy-linear",
+        "max_batch_size": 1,
+        "max_batch_timeout": 1,
+        "max_retries": 5,
+        "max_concurrency": 1,
+        "dead_letter_queue": "flowsavvy-linear-dlq",
+      },
+    ],
+  },
+}
