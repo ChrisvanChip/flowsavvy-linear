@@ -1,23 +1,9 @@
-import express, {Express} from "express";
-import router from "./routes";
-import bodyParser from 'body-parser'
+import { processQueue } from "./queue.ts";
+import { webhook } from "./webhook.ts";
 
-declare module 'http' {
-    export interface IncomingMessage {
-        rawBody: Buffer;
-    }
-}
+export type { Env, QueuedIssue } from "./types.ts";
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
-
-app.use(bodyParser.json({
-    verify: (req, res, buf) => {
-        req.rawBody = buf
-    }
-}))
-app.all("/", router);
-
-app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+export default {
+  fetch: webhook.fetch,
+  queue: processQueue,
+};

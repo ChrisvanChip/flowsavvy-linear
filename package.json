@@ -1,28 +1,31 @@
 {
   "name": "flowsavvy-linear",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "dev": "nodemon src/index.ts",
-    "start": "npx tsc && node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "2.0.0",
+  "private": true,
+  "description": "Sync assigned Linear issues to FlowSavvy on Cloudflare Workers",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
   },
-  "keywords": [],
-  "author": "@ChrisvanChip",
-  "license": "ISC",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "types": "wrangler types",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc",
+    "test": "node --test tests/*.test.ts",
+    "check": "npm run format:check && npm run typecheck && npm test && wrangler deploy --dry-run",
+    "migrate": "wrangler d1 migrations apply flowsavvy-linear",
+    "deploy": "wrangler deploy"
+  },
   "dependencies": {
-    "axios": "^1.7.4",
-    "body-parser": "^1.20.2",
-    "dotenv": "^16.4.5",
-    "express": "^4.22.1",
-    "form-data": "^4.0.0"
+    "hono": "^4.9.2"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.14.1",
-    "nodemon": "^3.1.3",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "@types/node": "^26.1.2",
+    "prettier": "^3.9.6",
+    "typescript": "^7.0.0",
+    "wrangler": "^4.28.1"
   }
 }

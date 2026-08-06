@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flowsavvy-linear",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-06",
+  "observability": { "enabled": true },
+  "vars": { "MINUTES_PER_POINT": "15" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "flowsavvy-linear",
+      "database_id": "replace-during-deploy",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "queues": {
+    "producers": [{ "binding": "WEBHOOK_QUEUE", "queue": "flowsavvy-linear" }],
+    "consumers": [
+      {
+        "queue": "flowsavvy-linear",
+        "max_batch_size": 1,
+        "max_batch_timeout": 1,
+        "max_retries": 5,
+        "max_concurrency": 1,
+        "dead_letter_queue": "flowsavvy-linear-dlq",
+      },
+    ],
+  },
+}
