@@ -1,6 +1,1 @@
-FLOW_SAVVY_EMAIL="you@example.com"
 FLOW_SAVVY_PASSWORD=""
-FLOW_SAVVY_TIME_ZONE="Europe/Amsterdam"
-LINEAR_ASSIGNEE_NAME="Your Name"
-LINEAR_WEBHOOKS='[{"secret":"","schedulingHoursId":123,"taskListId":456}]'
-MINUTES_PER_POINT="15"

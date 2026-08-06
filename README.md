@@ -12,14 +12,6 @@ However, creating tasks felt sluggish. I already use Linear for solo development
 
 The project is built to deploy on Cloudflare's services (Workers, Queues, D1). It's a vendor lock-in, but at least it's free ;)
 
-Set these encrypted Worker secrets when prompted (or use `wrangler secret put NAME`):
-
-- `FLOW_SAVVY_EMAIL`, `FLOW_SAVVY_PASSWORD`, `FLOW_SAVVY_TIME_ZONE`
-- `LINEAR_ASSIGNEE_NAME` = your exact Linear display name
-- `LINEAR_WEBHOOKS` = JSON array described below
-
-Run `npm run migrate -- --remote` after provisioning the database.
-
 In Linear, open **Workspace Settings → API → Webhooks**, create an Issue webhook pointing to the Worker URL, and use its signing secret in `LINEAR_WEBHOOKS`.
 
 ```json
@@ -34,6 +26,8 @@ In Linear, open **Workspace Settings → API → Webhooks**, create an Issue web
 ```
 
 Each webhook maps to a required FlowSavvy scheduling-hours profile and an optional task list. Find these numeric IDs in your browser's developer-tools network payload while changing a task's scheduling hours or list in FlowSavvy. You can use a separate Linear webhook/secret for each project mapping.
+
+Run `npm run migrate -- --remote` after provisioning the database.
 
 ## Behavior
 

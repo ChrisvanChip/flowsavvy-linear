@@ -19,6 +19,28 @@
     "migrate": "wrangler d1 migrations apply flowsavvy-linear",
     "deploy": "wrangler deploy"
   },
+  "cloudflare": {
+    "bindings": {
+      "FLOW_SAVVY_EMAIL": {
+        "description": "Email address used to sign in to FlowSavvy"
+      },
+      "FLOW_SAVVY_PASSWORD": {
+        "description": "Password used to sign in to FlowSavvy"
+      },
+      "FLOW_SAVVY_TIME_ZONE": {
+        "description": "FlowSavvy time zone, for example `Europe/Amsterdam`"
+      },
+      "LINEAR_ASSIGNEE_NAME": {
+        "description": "Your exact Linear display name"
+      },
+      "LINEAR_WEBHOOKS": {
+        "description": "JSON array containing each Linear signing secret and its FlowSavvy profile mapping"
+      },
+      "MINUTES_PER_POINT": {
+        "description": "FlowSavvy task duration assigned to each Linear estimate point (default 15)"
+      }
+    }
+  },
   "dependencies": {
     "hono": "^4.9.2"
   },

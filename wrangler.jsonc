@@ -4,7 +4,16 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-08-06",
   "observability": { "enabled": true },
-  "vars": { "MINUTES_PER_POINT": "15" },
+  "vars": {
+    "FLOW_SAVVY_EMAIL": "you@example.com",
+    "FLOW_SAVVY_TIME_ZONE": "Europe/Amsterdam",
+    "LINEAR_ASSIGNEE_NAME": "Your Name",
+    "MINUTES_PER_POINT": "15",
+    "LINEAR_WEBHOOKS": "[{\"secret\":\"\",\"schedulingHoursId\":123,\"taskListId\":456}]",
+  },
+  "secrets": {
+    "required": ["FLOW_SAVVY_PASSWORD"],
+  },
   "d1_databases": [
     {
       "binding": "DB",
