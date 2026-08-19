@@ -1,3 +1,5 @@
+
+
 ![image](https://github.com/ChrisvanChip/flowsavvy-linear/assets/31969757/13ff3ab7-45b5-4019-bfc2-8e750d57eb22)
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ChrisvanChip/flowsavvy-linear)
@@ -51,7 +53,7 @@ npm run migrate -- --local
 npm run dev
 ```
 
-Use `npm test`, `npm run typecheck`, or `npm run check` (tests, typecheck, and dry-run bundle). Local webhook signatures must cover the untouched JSON bytes and timestamps must be within one minute.
+Use `npm test`, `npm run typecheck`, or `npm run check` (format check, tests, typecheck, and dry-run bundle). Local webhook signatures must cover the untouched JSON bytes and timestamps must be within one minute.
 
 ---
 
